@@ -1,7 +1,7 @@
 package ggolist.refactor.global.service;
 
-import ggolist.refactor.basePlace.repository.EventRepository;
-import ggolist.refactor.basePlace.repository.PopupRepository;
+import ggolist.refactor.place.repository.EventRepository;
+import ggolist.refactor.place.repository.PopupRepository;
 import ggolist.refactor.favorite.repository.FavoriteEventRepository;
 import ggolist.refactor.favorite.repository.FavoritePopupRepository;
 import lombok.RequiredArgsConstructor;

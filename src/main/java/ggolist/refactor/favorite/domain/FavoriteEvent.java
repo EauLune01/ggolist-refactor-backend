@@ -1,6 +1,6 @@
 package ggolist.refactor.favorite.domain;
 
-import ggolist.refactor.basePlace.domain.Event;
+import ggolist.refactor.place.domain.Event;
 import ggolist.refactor.user.domain.User;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

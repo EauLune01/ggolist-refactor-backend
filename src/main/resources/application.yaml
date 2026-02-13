@@ -1,0 +1,62 @@
+spring:
+  application:
+    name: ggolist-refactor
+
+  config:
+    import: optional:file:.env[.properties]
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY}
+      chat:
+        options:
+          model: gpt-4o-mini
+          temperature: 0.3
+          max-tokens: 500
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/ggolist?serverTimezone=Asia/Seoul&useSSL=false&allowPublicKeyRetrieval=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 5
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+        show_sql: true
+        use_sql_comments: true
+    open-in-view: false
+
+jwt:
+  secret: ${JWT_SECRET}
+  access-token-validity-in-seconds: ${JWT_ACCESS_VALIDITY}
+  refresh-token-validity-in-seconds: ${JWT_REFRESH_VALIDITY}
+
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    persistAuthorization: true
+  override-with-generic-response: false
+
+logging:
+  level:
+    root: INFO
+    # 우리 프로젝트 코드는 자세히 보기 위해 DEBUG
+    ggolist.refactor: DEBUG
+    # 시큐리티 필터 체인 흐름을 보기 위해 TRACE (매우 상세함)
+    org.springframework.security: TRACE
+    # 하이버네이트 쿼리 파라미터 확인용
+    org.hibernate.orm.jdbc.bind: TRACE
