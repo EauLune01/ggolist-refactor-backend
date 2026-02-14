@@ -1,6 +1,6 @@
 package ggolist.refactor.favorite.repository;
 
-import com.querydsl.core.types.ConstantImpl;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import ggolist.refactor.favorite.dto.query.FavoriteItem;
 import ggolist.refactor.favorite.dto.query.QFavoriteItem;
@@ -29,21 +29,21 @@ public class FavoriteQueryRepository {
 
     public Slice<FavoriteItem> findAllFavorites(Long userId, Pageable pageable) {
         List<FavoriteItem> stores = queryFactory
-                .select(new QFavoriteItem(store.id, ConstantImpl.create("store"), store.name, store.likeCount, favoriteStore.createdAt))
+                .select(new QFavoriteItem(Expressions.asString("store"), store.id, store.name, store.likeCount, favoriteStore.createdAt))
                 .from(favoriteStore)
                 .join(favoriteStore.store, store)
                 .where(favoriteStore.user.id.eq(userId))
                 .fetch();
 
         List<FavoriteItem> events = queryFactory
-                .select(new QFavoriteItem(event.id, ConstantImpl.create("event"), event.name, event.likeCount, favoriteEvent.createdAt))
+                .select(new QFavoriteItem(Expressions.asString("event"),event.id, event.name, event.likeCount, favoriteEvent.createdAt))
                 .from(favoriteEvent)
                 .join(favoriteEvent.event, event)
                 .where(favoriteEvent.user.id.eq(userId))
                 .fetch();
 
         List<FavoriteItem> popups = queryFactory
-                .select(new QFavoriteItem(popup.id, ConstantImpl.create("popup"), popup.name, popup.likeCount, favoritePopup.createdAt))
+                .select(new QFavoriteItem(Expressions.asString("popup"),popup.id, popup.name, popup.likeCount, favoritePopup.createdAt))
                 .from(favoritePopup)
                 .join(favoritePopup.popup, popup)
                 .where(favoritePopup.user.id.eq(userId))

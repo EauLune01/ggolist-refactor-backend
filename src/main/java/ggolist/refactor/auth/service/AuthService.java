@@ -8,13 +8,15 @@ import ggolist.refactor.auth.dto.result.TokenRefreshResult;
 import ggolist.refactor.global.auth.jwt.JwtTokenProvider;
 import ggolist.refactor.global.exception.auth.InvalidTokenException;
 import ggolist.refactor.global.exception.auth.TokenMismatchException;
-import ggolist.refactor.global.exception.user.EmailDuplicateException;
+import ggolist.refactor.global.exception.mail.EmailDuplicateException;
+import ggolist.refactor.global.exception.mail.EmailNotVerifiedException;
 import ggolist.refactor.global.exception.user.InvalidPasswordException;
 import ggolist.refactor.global.exception.user.UserNotFoundException;
 import ggolist.refactor.user.domain.User;
 import ggolist.refactor.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -31,14 +33,16 @@ public class AuthService {
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final StringRedisTemplate redisTemplate;
 
 
     public void signup(SignupCommand command) {
-        validateDuplicateEmail(command.getEmail());
+        validateSignupEmail(command.getEmail());
         String encodedPassword = passwordEncoder.encode(command.getPassword());
         saveUser(command, encodedPassword);
+        redisTemplate.delete(RedisMailConstants.VERIFIED_PREFIX + command.getEmail());
     }
+
 
     public LoginResult login(LoginCommand command) {
         User user = getUserByEmail(command.getEmail());
@@ -58,9 +62,22 @@ public class AuthService {
 
     /******************** Helper Method ********************/
 
+    private void validateSignupEmail(String email) {
+        validateDuplicateEmail(email);
+        validateEmailVerification(email);
+    }
+
     private void validateDuplicateEmail(String email) {
         if (userRepository.existsByEmail(email)) {
             throw new EmailDuplicateException("이미 가입된 이메일이 있습니다.");
+        }
+    }
+
+    private void validateEmailVerification(String email) {
+        String isVerified = redisTemplate.opsForValue().get(RedisMailConstants.VERIFIED_PREFIX + email);
+
+        if (isVerified == null || !isVerified.equals("TRUE")) {
+            throw new EmailNotVerifiedException("이메일 인증이 완료되지 않았거나 인증 시간이 만료되었습니다.");
         }
     }
 
@@ -148,5 +165,4 @@ public class AuthService {
             );
         }
     }
-
 }

@@ -5,6 +5,7 @@ import ggolist.refactor.global.exception.auth.InvalidTokenException;
 import ggolist.refactor.global.exception.category.InvalidCategoryAccessException;
 import ggolist.refactor.global.exception.favorite.FavoriteDuplicateException;
 import ggolist.refactor.global.exception.favorite.FavoriteNotFoundException;
+import ggolist.refactor.global.exception.mail.*;
 import ggolist.refactor.global.exception.place.PlaceNotFoundException;
 import ggolist.refactor.global.exception.user.*;
 import org.springframework.http.HttpStatus;
@@ -36,8 +37,23 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ExceptionHandler(EmailNotVerifiedException.class)
+    protected ResponseEntity<ApiResponse<?>> handleEmailNotVerifiedException(EmailNotVerifiedException e) {
+        return buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
     @ExceptionHandler(EmailDuplicateException.class)
     protected ResponseEntity<ApiResponse<?>> handleEmailDuplicateException(EmailDuplicateException e) {
+        return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
+    }
+
+    @ExceptionHandler(VerificationCodeMismatchException.class)
+    protected ResponseEntity<ApiResponse<?>> handleVerificationCodeMismatchException(VerificationCodeMismatchException e) {
+        return buildErrorResponse(HttpStatus.BAD_REQUEST, e.getMessage());
+    }
+
+    @ExceptionHandler(VerificationCodeNotFoundException.class)
+    protected ResponseEntity<ApiResponse<?>> handleVerificationCodeNotFoundException(VerificationCodeNotFoundException e) {
         return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 

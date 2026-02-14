@@ -5,6 +5,18 @@ spring:
   config:
     import: optional:file:.env[.properties]
 
+  mail:
+    host: ${GMAIL_HOST}
+    port: ${GMAIL_PORT}
+    username: ${GMAIL_USERNAME}
+    password: ${GMAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
   ai:
     openai:
       api-key: ${OPENAI_API_KEY}

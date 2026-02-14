@@ -51,7 +51,7 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers("/api/auth/signup",
                                 "/api/auth/login",
-                                "/api/auth/refresh").permitAll()
+                                "/api/auth/refresh","/api/mail/**").permitAll()
                         .requestMatchers("/api/users/**").hasRole("USER")
                         .requestMatchers("/api/merchants/**").hasRole("MERCHANT")
                         .requestMatchers("/api/auth/logout").authenticated()
