@@ -37,6 +37,11 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, e.getMessage());
     }
 
+    @ExceptionHandler(EmailSendException.class)
+    protected ResponseEntity<ApiResponse<?>> handleEmailSendException(EmailSendException e) {
+        return buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());
+    }
+
     @ExceptionHandler(EmailNotVerifiedException.class)
     protected ResponseEntity<ApiResponse<?>> handleEmailNotVerifiedException(EmailNotVerifiedException e) {
         return buildErrorResponse(HttpStatus.FORBIDDEN, e.getMessage());

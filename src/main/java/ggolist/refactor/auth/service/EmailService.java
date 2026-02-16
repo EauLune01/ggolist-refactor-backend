@@ -64,7 +64,7 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("[ggolist] 회원가입 인증번호 안내");
-        message.setText("인증번호는 [" + authCode + "] 입니다. (5분 뒤에 만료됩니다.)");
+        message.setText("인증번호는 [" + authCode + "] 입니다. 인증번호는 이메일 발송 시점으로부터 5분간 유효합니다.");
         return message;
     }
 
